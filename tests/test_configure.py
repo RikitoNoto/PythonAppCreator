@@ -17,9 +17,21 @@ class TestConfigure(unittest.TestCase):
         os.mkdir(self.BUILD_PATH)
 
     def test_configure_copy(self):
-        self.assertEqual(len(self.created_configure), len(self.correct_configure), self.created_configure)
-        for created_configure in self.created_configure:
-            self.assertTrue(created_configure in self.correct_configure, self.created_configure)
+        self.check_count_and_configure(self.created_configure, self.correct_configure)
+
+    def test_configure_copy_without_dir(self):
+        build_path = os.path.join("..", "temp2")
+        Configuretor.create_configuration(build_path)
+
+        self.check_count_and_configure(os.listdir(build_path), self.correct_configure)
+
+        shutil.rmtree(build_path)
+
+    def check_count_and_configure(self, created_configure:list, correct_configure:list):
+        self.assertEqual(len(created_configure), len(correct_configure), created_configure)
+        for created_dir in self.created_configure:
+            self.assertTrue(created_dir in correct_configure, created_configure)
+
 
     @property
     def created_configure(self):
